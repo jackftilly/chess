@@ -4,7 +4,7 @@ module SteppingPieces
     row, col = pos
     move_difs.each do |diff|
       new_pos = [row+diff[0],col+diff[1]]
-      possible << new_pos if in_bounds?(new_pos)
+      possible << new_pos if in_bounds?(new_pos) && @board[new_pos].color != @color
     end
     possible
   end

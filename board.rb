@@ -8,7 +8,7 @@ load 'pieces/queen.rb'
 load 'pieces/rook.rb'
 
 class Board
-  attr_accessor :grid
+  attr_accessor :grid, :display
   def create_grid
     @null_piece = NullPiece.instance
     grid = Array.new(8) { Array.new(8) }
@@ -22,8 +22,8 @@ class Board
     seventh_row = grid[6]
     eighth_row = grid[7]
     (0..7).each do |idx|
-      second_row[idx] = Pawn.new(:black,[1,idx])
-      seventh_row[idx] = Pawn.new(:white,[6,idx])
+      second_row[idx] = Pawn.new(:black,self,[1,idx])
+      seventh_row[idx] = Pawn.new(:white,self,[6,idx])
       (2..5).each do |idx2|
         grid[idx2][idx] = @null_piece
       end
@@ -34,10 +34,10 @@ class Board
     grid[7][1],grid[7][6] = Knight.new(:white,self,[7,1]), Knight.new(:white,self,[7,6])
     grid[0][2],grid[0][5] = Bishop.new(:black,self,[0,2]), Bishop.new(:black,self,[0,5])
     grid[7][2],grid[7][5] = Bishop.new(:white,self,[7,2]), Bishop.new(:white,self,[7,5])
-    grid[0][3] = Queen.new(:black,self)
-    grid[0][4] = King.new(:black,self)
-    grid[7][3] = Queen.new(:white,self)
-    grid[7][4] = King.new(:white,self)
+    grid[0][3] = Queen.new(:black,self,[0,3])
+    grid[0][4] = King.new(:black,self,[0,4])
+    grid[7][3] = Queen.new(:white,self,[7,3])
+    grid[7][4] = King.new(:white,self,[7,4])
 
     grid
 
@@ -46,6 +46,7 @@ class Board
 
   def initialize
     @grid = self.create_grid
+    @display = Display.new(self)
   end
 
 
@@ -60,6 +61,7 @@ class Board
   def move!(start, end_pos)
     piece = self[start]
     self[start] = @null_piece
+    p end_pos
     self[end_pos] = piece
   end
 
@@ -83,7 +85,7 @@ class Board
 
   def in_check?(color)
     flat = @grid.flatten
-    index = flat.find_index do |piece|
+    index = flat.index do |piece|
       piece.is_a?(King) && piece.color == color
     end
     king_pos = [index / 8,index % 8]
@@ -102,5 +104,20 @@ class Board
       return false unless piece.valid_moves.empty?
     end
     true
+  end
+
+  def deep_dup
+    new_board = Board.new
+    (0..7).each do |i|
+      (0..7).each do |j|
+        if self[[i,j]].is_a?(NullPiece)
+          new_board[[i,j]] = NullPiece.instance
+        else
+          new_piece = self[[i,j]].dup(new_board)
+          new_board[[i,j]] = new_piece
+        end
+      end
+    end
+    new_board
   end
 end

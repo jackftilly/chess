@@ -33,7 +33,14 @@ module SlidingPieces
     current_mult = 1
     current_pos = [row + dx, col + dy]
     while in_bounds?(current_pos)
-      break unless @board[current_pos].color.nil?
+      if @board[current_pos].is_a?(Piece)
+        if @board[current_pos].color != @color
+          possible << current_pos
+          return possible
+        else
+          return possible
+        end
+      end
       possible << current_pos
       current_mult += 1
       current_pos = [row + dx * current_mult, col + dy * current_mult]

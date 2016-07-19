@@ -1,7 +1,7 @@
 require 'singleton'
 class NullPiece
   include Singleton
-
+  attr_accessor :color, :pos
   def color
     nil
   end
@@ -20,6 +20,10 @@ class NullPiece
 
   def empty?
     true
+  end
+
+  def dup
+    self
   end
 
 end
