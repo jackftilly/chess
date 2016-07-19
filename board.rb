@@ -6,21 +6,21 @@ load 'pieces/knight.rb'
 load 'pieces/pawn.rb'
 load 'pieces/queen.rb'
 load 'pieces/rook.rb'
+load 'errors.rb'
 
 class Board
+
   attr_accessor :grid, :display
+
   def create_grid
     @null_piece = NullPiece.instance
     grid = Array.new(8) { Array.new(8) }
-    #0 row: black pieces
-    #1 row: black pawns
-    #2-5 row: nil pieces
-    #6 row: white pawns
-    #7 row: white pieces
+
     first_row = grid.first
     second_row = grid[1]
     seventh_row = grid[6]
     eighth_row = grid[7]
+
     (0..7).each do |idx|
       second_row[idx] = Pawn.new(:black,self,[1,idx])
       seventh_row[idx] = Pawn.new(:white,self,[6,idx])
@@ -28,20 +28,27 @@ class Board
         grid[idx2][idx] = @null_piece
       end
     end
-    grid[0][0],grid[0][7] = Rook.new(:black,self,[0,0]), Rook.new(:black,self,[0,7])
-    grid[7][0],grid[7][7] = Rook.new(:white,self,[7,0]), Rook.new(:white,self,[7,7])
-    grid[0][1],grid[0][6] = Knight.new(:black,self,[0,1]), Knight.new(:black,self,[0,6])
-    grid[7][1],grid[7][6] = Knight.new(:white,self,[7,1]), Knight.new(:white,self,[7,6])
-    grid[0][2],grid[0][5] = Bishop.new(:black,self,[0,2]), Bishop.new(:black,self,[0,5])
-    grid[7][2],grid[7][5] = Bishop.new(:white,self,[7,2]), Bishop.new(:white,self,[7,5])
-    grid[0][3] = Queen.new(:black,self,[0,3])
-    grid[0][4] = King.new(:black,self,[0,4])
-    grid[7][3] = Queen.new(:white,self,[7,3])
-    grid[7][4] = King.new(:white,self,[7,4])
+
+    grid[0] = populate_row(0, :black)
+    grid[7] = populate_row(7, :white)
 
     grid
 
+  end
 
+  def populate_row(x, color)
+    row = []
+
+    row[0] = Rook.new(color,self,[x,0])
+    row[1] = Knight.new(color,self,[x,1])
+    row[2] = Bishop.new(color,self,[x,2])
+    row[3] = Queen.new(color,self,[x,3])
+    row[4] = King.new(color,self,[x,4])
+    row[6] = Knight.new(color,self,[x,6])
+    row[5] = Bishop.new(color,self,[x,5])
+    row[7] = Rook.new(color,self,[x,7])
+
+    row
   end
 
   def initialize
@@ -52,17 +59,15 @@ class Board
 
   def move(start, end_pos)
     piece = self[start]
-    raise "invalid move" unless piece.valid_moves.include?(end_pos)
+    raise InvalidMove.new  unless piece.valid_moves.include?(end_pos)
     self[start] = @null_piece
     self[end_pos] = piece
-    #todo update piece pos
     piece.pos = end_pos
   end
+
   def move!(start, end_pos)
-    piece = self[start]
+    self[end_pos] = self[start]
     self[start] = @null_piece
-    p end_pos
-    self[end_pos] = piece
   end
 
   def [](pos)
@@ -77,10 +82,6 @@ class Board
 
   def in_bounds?(pos)
     pos.all? { |x| x.between?(0, 7) }
-  end
-
-  def rows
-    @grid
   end
 
   def in_check?(color)

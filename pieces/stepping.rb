@@ -1,4 +1,5 @@
 module SteppingPieces
+
   def moves
     possible = []
     row, col = pos
@@ -12,4 +13,5 @@ module SteppingPieces
   def in_bounds?(pos)
     pos.all? { |x| x.between?(0, 7) }
   end
+  
 end

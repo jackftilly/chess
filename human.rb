@@ -8,10 +8,13 @@ class HumanPlayer
     @display = display
   end
 
-  def get_move
+  def get_move(invalid)
     start_pos = nil
     end_pos = nil
     @display.render
+    if invalid
+      puts "That was an invalid input... enter another input that is valid please!"
+    end
     puts "#{@name}, please move to starting position on board and press enter"
     start_pos = nil
     until start_pos
@@ -35,7 +38,5 @@ class HumanPlayer
 
     [start_pos, end_pos]
   end
-
-
-
+  
 end
