@@ -6,15 +6,15 @@ This is a chess game for the console written entirely in Rub I utilized third pa
 
 In order to play this game, follow these instructions:
 -  Install Ruby. If you are on a Mac the easiest way to do this is enter your console, install homebrew and type in:
-   ```
+   ```shell
       brew install ruby 
    ```
 -  The next step is to clone the package to your desktop. In your command line type in:
-   ```
+   ```shell
       git clone https://github.com/jack/chess.git
    ```
 - To run the game, next enter the chess folder and run the game with ruby:
-   ```
+   ```shell
       cd chess
       ruby game.rb
    ```
