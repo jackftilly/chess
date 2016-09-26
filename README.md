@@ -1,3 +1,6 @@
+Chess for App Academy. Instructions for the chess are right here:
+
+
 # Chess
 
 Write a [chess game][wiki-chess] in an object-oriented way. **Please
