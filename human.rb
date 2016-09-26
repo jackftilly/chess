@@ -1,11 +1,10 @@
 class HumanPlayer
   attr_accessor :color, :name
 
-  def initialize(display, color)
+  def initialize(display, color, name)
     @color = color
-    print "Enter player name: "
-    @name = gets.chomp
     @display = display
+    @name = name
   end
 
   def get_move(invalid)
@@ -38,5 +37,5 @@ class HumanPlayer
 
     [start_pos, end_pos]
   end
-  
+
 end

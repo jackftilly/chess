@@ -3,7 +3,7 @@ require_relative 'cursorable'
 load 'board.rb'
 class Display
   include Cursorable
-
+  attr_accessor :board
   def initialize(board)
     @board = board
     @cursor_pos = [0, 0]
